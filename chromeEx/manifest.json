@@ -1,0 +1,17 @@
+{
+  // 必须的字段
+    "name": "My Extension",
+    "version": "1.0",
+    "manifest_version": 2,
+    // 建议提供的字段
+    "description": "A plain text description",
+    // 多选一，或者都不提供
+    // 根据需要提供
+    "content_scripts": [
+      {
+        "matches": ["https://www.zhihu.com/*","https://www.zhihu.com/question/*"],
+        "css": ["src/styles.css"],
+        "js": ["src/content.js"]
+      }
+    ]
+  }  
