@@ -11,7 +11,8 @@
       {
         "matches": ["https://www.zhihu.com/*","https://www.zhihu.com/question/*"],
         "css": ["src/styles.css"],
-        "js": ["src/content.js"]
+        "js": ["src/mod/jq.js","src/content.js"],
+        "run_at":"document_end"
       }
     ]
   }  
