@@ -9,7 +9,9 @@ function Extension(content){
             listNum:'.List-headerText',
             itemDom:{
                 userLink:'.UserLink-link',
-            }
+                noscriptTag:'noscript'
+            },
+            colAnswer:'.CollapsedAnswers-bar'
         };
     this.content = Object.assign(_content,content);
     this.init();
@@ -32,18 +34,21 @@ Extension.prototype.loadMore = function(){
         this.getAnswerList();
     }
 }
+
 // 获取连接
 Extension.prototype.getAnswerList = function(){
   var listNum = parseInt($(this.content.listNum).text());
-  console.log($(this.content.listNum).text())
-  console.log(listNum)
-  var lists = $(this.content.answerItem);
-  console.log(lists.length)
-  if(lists.length!=listNum){
+  var colNum = parseInt($(this.content.colAnswer).text());
+  var lists = $(this.content.answerItem).length+colNum;
+  if(lists<=listNum  ){
     this.init();
     return false;
   }
-  this.itemList = this._getItemFromDom(lists);
+  var itemList = this._getItemFromDom($(this.content.answerItem));
+  console.log(this.itemList)
+  this.sendMsg('down_link',itemList,function(err){
+      console.log(err)
+  })
 }
 
 // 获取dom 筛选出链接
@@ -58,7 +63,6 @@ Extension.prototype._getItemFromDom = function (lists){
     return contents;
 }
 
-
 // 分析dom 获取内容
 // 返回对象
 Extension.prototype._getLink = function(item){
@@ -70,17 +74,29 @@ Extension.prototype._getLink = function(item){
     try{
         content.user_name = $(item).find(this.content.itemDom.userLink).text();
         content.user_link = $(item).find(this.content.itemDom.userLink).attr('href');
-
+        var imgLists = $(item).find(this.content.itemDom.noscriptTag);
+        content.user_img_srcs = this._getImg(imgLists);
     }catch(e){
-
+        console.error('分析dom 获取内容 出错！！！')
     }
     return content;
 
 
 }
 
+Extension.prototype._getImg =function(lists){
+    var contents=[];
+    if(lists && Object.keys(lists).length>0){
+        for(let i=0;i<lists.length;i++){
+            contents.push($(lists[i].innerText).attr('src'));
+        }
+    }
+    return contents;
+}
 
-
+Extension.prototype.sendMsg = function(type,data,callback){
+    chrome.runtime.sendMessage({type: type,data:data}, callback);
+}
 
 
 new Extension(null);

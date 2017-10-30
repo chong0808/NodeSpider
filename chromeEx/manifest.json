@@ -7,6 +7,17 @@
     "description": "A plain text description",
     // 多选一，或者都不提供
     // 根据需要提供
+    "permissions": [
+      "tabs","activeTab"
+   ],
+   "browser_action": {
+    "default_icon": "images/icon19.png", // optional 
+    "default_title": "zhihu image download"    // optional; shown in tooltip 
+         
+  },
+  "background": {
+      "scripts": ["src/back.js"]
+  },
     "content_scripts": [
       {
         "matches": ["https://www.zhihu.com/*","https://www.zhihu.com/question/*"],
